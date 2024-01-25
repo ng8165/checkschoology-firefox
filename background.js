@@ -1,18 +1,18 @@
 var ignore = false;
-chrome.runtime.onInstalled.addListener(function() {
-  chrome.tabs.create({url: "https://schoology.harker.org/calendar"});
+browser.runtime.onInstalled.addListener(function() {
+  browser.tabs.create({url: "https://schoology.harker.org/calendar"});
 });
-chrome.browserAction.onClicked.addListener(function() {
-  chrome.tabs.create({url: "https://schoology.harker.org/calendar"});
+browser.browserAction.onClicked.addListener(function() {
+  browser.tabs.create({url: "https://schoology.harker.org/calendar"});
 });
-chrome.webRequest.onBeforeRequest.addListener(
+browser.webRequest.onBeforeRequest.addListener(
   function(details) {
     if (ignore || !/.*:\/\/(schoology\.harker\.org|athena\.harker\.org|app\.schoology\.com)\/calendar\/.+\/.+/.test(details.url) || details.method !== "GET") {
       ignore = false;
       return;
     }
     ignore = true;
-    chrome.tabs.sendMessage(details.tabId, details.url);
+    browser.tabs.sendMessage(details.tabId, details.url);
   },
   {
     urls: [

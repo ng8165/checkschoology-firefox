@@ -1,5 +1,5 @@
 var events = {};
-chrome.runtime.onMessage.addListener(async function(url) {
+browser.runtime.onMessage.addListener(async function(url) {
   try {
     events = await (await fetch(url)).json();
     updateAll();
@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(async function(url) {
 function updateAll() {
   if (Object.keys(events).length === 0) return;
   const cells = document.getElementsByClassName("fc-event");
-  chrome.storage.sync.get("ids", function(result) {
+  browser.storage.local.get("ids").then(function(result) {
     const ids = result.ids || {};
     for (let i = 0, j; i < cells.length; i++) {
       const cell = cells[i];
@@ -30,10 +30,10 @@ function updateAll() {
       el.innerHTML = "done";
       el.addEventListener("click", function(e) {
         e.stopPropagation();
-        chrome.storage.sync.get("ids", function(result) {
+        browser.storage.local.get("ids").then(function(result) {
           if (!result.ids) result.ids = {};
           result.ids[event.id] = !result.ids[event.id];
-          chrome.storage.sync.set({ids: result.ids});
+          browser.storage.local.set({ids: result.ids});
           updateState(result.ids[event.id], el, cell);
         });
       });
